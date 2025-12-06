@@ -1,0 +1,122 @@
+{% extends 'tiendaApp/base.html' %}
+<!-- {% load crispy_forms_tags %} -->
+
+{% block title %}
+    {% if editar %}Editar Empleado{% else %}Nuevo Empleado{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>{% if editar %}Editar Empleado{% else %}Nuevo Empleado{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" 
+                      action="{% if editar %}{% url 'empleadoEditado' empleado.id %}{% else %}{% url 'crearEmpleados' %}{% endif %}">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="run" class="form-label">RUN</label>
+                            <input type="text" class="form-control" id="run" name="run" 
+                                   value="{% if empleado %}{{ empleado.run }}{% endif %}"
+                                   placeholder="12345678-9">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre *</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" 
+                                   value="{% if empleado %}{{ empleado.nombre }}{% endif %}"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="paterno" class="form-label">Apellido Paterno</label>
+                            <input type="text" class="form-control" id="paterno" name="paterno" 
+                                   value="{% if empleado %}{{ empleado.paterno }}{% endif %}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" 
+                                   value="{% if empleado %}{{ empleado.apellido }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="{% if empleado %}{{ empleado.email }}{% endif %}"
+                                   required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" 
+                                   value="{% if empleado %}{{ empleado.telefono }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="departamento" class="form-label">Departamento</label>
+                            <input type="text" class="form-control" id="departamento" name="departamento" 
+                                   value="{% if empleado %}{{ empleado.departamento }}{% endif %}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="cargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="cargo" name="cargo" 
+                                   value="{% if empleado %}{{ empleado.cargo }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="salario" class="form-label">Salario</label>
+                            <input type="number" class="form-control" id="salario" name="salario" 
+                                   value="{% if empleado %}{{ empleado.salario }}{% endif %}"
+                                   step="0.01">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="sueldo" class="form-label">Sueldo</label>
+                            <input type="number" class="form-control" id="sueldo" name="sueldo" 
+                                   value="{% if empleado %}{{ empleado.sueldo }}{% endif %}"
+                                   step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fecha_contratacion" class="form-label">Fecha Contratación</label>
+                            <input type="date" class="form-control" id="fecha_contratacion" name="fecha_contratacion" 
+                                   value="{% if empleado %}{{ empleado.fecha_contratacion|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="fotografia" class="form-label">Fotografía</label>
+                            <input type="file" class="form-control" id="fotografia" name="fotografia" accept="image/*">
+                            {% if empleado.fotografia %}
+                            <small class="text-muted">Archivo actual: {{ empleado.fotografia.name }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'inicio' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if editar %}Actualizar{% else %}Guardar{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

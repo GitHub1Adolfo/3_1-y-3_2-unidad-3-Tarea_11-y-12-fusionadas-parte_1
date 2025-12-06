@@ -1,0 +1,125 @@
+{% extends 'tiendaApp/base.html' %}
+{% load static %}
+
+{% block title %}Lista de Empleados{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: #343a40;
+        color: white;
+        font-weight: bold;
+    }
+    .salary-cell {
+        font-weight: bold;
+        color: #28a745;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12 text-center">
+        <h2>Lista de Empleados</h2>
+        {% if user.is_authenticated %}
+        <a href="{% url 'crearEmpleados' %}" class="btn btn-primary mt-3">
+            <i class="bi bi-plus-circle"></i> Agregar Empleado
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% if empleados %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>RUN</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Departamento</th>
+                        <th>Cargo</th>
+                        <th>Salario</th>
+                        <th>Fecha Contratación</th>
+                        {% if user.is_authenticated %}
+                        <th>Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleado in empleados %}
+                    <tr>
+                        <td>{{ empleado.id }}</td>
+                        <td>{{ empleado.run|default:"-" }}</td>
+                        <td>
+                            {{ empleado.nombre }}
+                            {% if empleado.apellido %}
+                                {{ empleado.apellido }}
+                            {% elif empleado.paterno %}
+                                {{ empleado.paterno }}
+                            {% endif %}
+                        </td>
+                        <td>{{ empleado.email }}</td>
+                        <td>{{ empleado.telefono|default:"-" }}</td>
+                        <td>{{ empleado.departamento|default:"-" }}</td>
+                        <td>{{ empleado.cargo|default:"-" }}</td>
+                        <td class="salary-cell">
+                            {% if empleado.salario %}
+                                ${{ empleado.salario|floatformat:0 }}
+                            {% elif empleado.sueldo %}
+                                ${{ empleado.sueldo|floatformat:0 }}
+                            {% else %}
+                                $0
+                            {% endif %}
+                        </td>
+                        <td>{{ empleado.fecha_contratacion|date:"d/m/Y"|default:"-" }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'editarEmpleado' empleado.id %}" class="btn btn-sm btn-warning">
+                                Editar
+                            </a>
+                            <a href="{% url 'eliminarEmpleado' empleado.id %}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Está seguro de eliminar este empleado?')">
+                                Eliminar
+                            </a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            No hay empleados registrados en el sistema.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="text-center">Endpoints API Disponibles</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>API Simple:</strong> <a href="{% url 'empleadosApi' %}" target="_blank">/empleadosApi/</a> (JsonResponse)</li>
+                    <li><strong>API REST - Lista:</strong> <a href="/api/empleados/" target="_blank">/api/empleados/</a> (GET, POST)</li>
+                    <li><strong>API REST - Detalle:</strong> /api/empleados/&lt;id&gt;/ (GET, PUT, DELETE)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
